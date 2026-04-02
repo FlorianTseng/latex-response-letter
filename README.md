@@ -1,2 +1,3 @@
 # latex-response-letter
-A minimalist yet fully functional LaTeX response letter template for paper submission rebuttals.
+
+This template is compiled with pdfLaTeX. If you encounter any issues while using it, feel free to open an issue.
