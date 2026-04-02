@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=20mm,
+ right=20mm,
+ top=20mm,
+ }
+\usepackage[affil-it]{authblk}
+\usepackage{hyperref}
+% \renewcommand{\familydefault}{\sfdefault}
+\usepackage{newtxtext,newtxmath}
+\usepackage{graphicx, cancel, booktabs, tabularx, amsmath, amsfonts, amssymb, bm, placeins, float,mathrsfs,url}
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\renewcommand{\thefigure}{R\arabic{figure}}
+\renewcommand{\thetable}{R\arabic{table}}
+\usepackage{enumitem}   % custom enumeration
+\usepackage{hyperref}   % autoref
+\usepackage{booktabs}
+% \usepackage{svg}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{adjustbox}
+
+\hypersetup{
+colorlinks = true,
+linkcolor = [rgb]{0.87,0.18,0.22},
+citecolor = [rgb]{0.0,0.60,0.33},
+urlcolor = [rgb]{0.20, 0.30, 0.54}}
+% \definecolor{eggplant}{RGB}{180,33,147}
+
+\renewcommand{\theequation}{Revision Eq.~\arabic{equation}}
+
+% \newcounter{responsecounter}
+% \setcounter{responsecounter}{-1} 
+
+% \newenvironment{response}[1][]{
+%   \refstepcounter{responsecounter}
+%   \par\medskip
+%   \noindent
+%   \textbf{Response~\theresponsecounter.}~#1\par
+%   \smallskip
+% }{\par\medskip}
+\usepackage{orcidlink}
+\usepackage{xcolor} % defines colors 
+\usepackage[most]{tcolorbox} %  colored and framed text boxes
+\definecolor{block-gray}{gray}{0.95}
+\newtcolorbox{xresponse}{%
+	empty,
+    borderline west = {4pt}{0pt}{gray},
+    boxrule = 0pt,
+    boxsep = 0pt,
+    breakable,
+    colback = block-gray,
+    enhanced,
+    frame hidden,
+    left skip = 0pt,
+    notitle,
+    parbox = false,
+    sharp corners,
+}
+\renewcommand\Authfont{\small}
+\renewcommand\Affilfont{\small\itshape}
+
+% set a counter for the environment so that \autoref can be used
+\newcounter{responseCounter}
+\newenvironment{response}[1][]{\begin{xresponse}\refstepcounter{responseCounter}\textbf{Response~\theresponseCounter. #1}}{\end{xresponse}}
+
+% set the \autoref abbreviation for the response environment
+\def\responseCounterautorefname{Resp.}
+\def\responseCounterautorefnameplural{Resps.}
+
+% use \Autoref{one,two,three} for multiple references in one command
+% from https://tex.stackexchange.com/a/183682
+\makeatletter
+% define a macro \Autoref to allow multiple references to be passed to \autoref
+\newcommand\Autoref[1]{\@first@ref#1,@}
+\def\@throw@dot#1.#2@{#1}% discard everything after the dot
+\def\@set@refname#1{%    % set \@refname to autoefname+s using \getrefbykeydefault
+    \edef\@tmp{\getrefbykeydefault{#1}{anchor}{}}%
+    \xdef\@tmp{\expandafter\@throw@dot\@tmp.@}%
+    \ltx@IfUndefined{\@tmp autorefnameplural}%
+         {\def\@refname{\@nameuse{\@tmp autorefname}s}}%
+         {\def\@refname{\@nameuse{\@tmp autorefnameplural}}}%
+}
+\def\@first@ref#1,#2{%
+  \ifx#2@\autoref{#1}\let\@nextref\@gobble% only one ref, revert to normal \autoref
+  \else%
+    \@set@refname{#1}%  set \@refname to autoref name
+    \@refname~\ref{#1}% add autoefname and first reference
+    \let\@nextref\@next@ref% push processing to \@next@ref
+  \fi%
+  \@nextref#2%
+}
+\def\@next@ref#1,#2{%
+   \ifx#2@ and~\ref{#1}\let\@nextref\@gobble% at end: print and+\ref and stop
+   \else, \ref{#1}% print  ,+\ref and continue
+   \fi%
+   \@nextref#2%
+}
+\makeatother
+
+% ################################
+%          Title and author
+% ################################
+
+% ======= Title =======
+\title{\large \textbf{{\sc Response Letter}\\Title of your article}}
+
+% ======= Authors =======
+\author[1]{AAA~\orcidlink{1111-1111-1111-1111}}
+\author[1,2]{AAA\thanks{\href{mailto:xxx@whu.edu.cn}{xxx@whu.edu.cn}}~\orcidlink{0000-0000-0000-0000}}
+% ======= Affiliations =======
+\affil[1]{School of Integrated Circuits, Wuhan University, Wuhan 430072, China}
+\affil[2]{Key Laboratory of Artiﬁcial Micro- and Nano-Structures of Ministry of Education, School of Physics and Technology, Wuhan University, Wuhan 430072, China}
+
+
+% ======= Date =======
+\date{\small\today}
+% ################################
+%          Begin document
+% ################################
+
+\begin{document}
+\maketitle
+
+% ################################
+%         Intro/Letter
+% ################################
+% - Direct response, revision/rebuttal letter
+\input{sections/intro}
+\clearpage
+% ################################
+%    Own summary of reviews
+% ################################
+% - Main issues and responses
+% - Summaries of each individual review
+% \input{sections/owns_all}
+% \newpage
+
+% ################################
+%    Full reviews and responses
+% ################################
+
+\tableofcontents
+\clearpage
+
+\input{sections/reviews_all}
+\newpage
+
+% ################################
+%        Difference view
+% ################################
+% Difference view between previous and current submissions, see:
+% https://github.com/ftilmann/latexdiff/
+% https://www.overleaf.com/learn/latex/Articles/Using_Latexdiff_For_Marking_Changes_To_Tex_Documents
+% https://ctan.org/pkg/latexdiff
+
+% NOTE: uncomment \usepackage{pdfpages} in the Packages section above
+%\includepdf[pages=-]{diff_versions/diff_final.pdf}
+
+\bibliographystyle{naturemag}  % or plainnat, abbrvnat, etc.
+\bibliography{ref}
+
+\end{document}
